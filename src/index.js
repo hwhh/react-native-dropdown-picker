@@ -96,7 +96,7 @@ class DropDownPicker extends React.Component {
                props: {
                    ...state.props,
                    defaultValue: props.defaultValue
-               } 
+               }
             }
         }
 
@@ -359,7 +359,7 @@ class DropDownPicker extends React.Component {
         } else {
             return item;
         }
-        
+
         let len2 = label.length;
         return label + (len !== len2 ? '...' : '');
     }
@@ -447,9 +447,13 @@ class DropDownPicker extends React.Component {
                                 placeholderTextColor={this.props.searchablePlaceholderTextColor}
                                 {...searchTextInputProps}
                                 onChangeText={ (text) => {
-                                    this.setState({
-                                        searchableText: text
-                                    })
+                                    if(this.props.search){
+                                        this.props.search(text)
+                                    }else{
+                                        this.setState({
+                                            searchableText: text
+                                        })
+                                    }
                                     if(searchTextInputProps.onChangeText) searchTextInputProps.onChangeText(text);
                                 }}
                             />
@@ -461,6 +465,9 @@ class DropDownPicker extends React.Component {
                         style={{width: '100%'}}
                         nestedScrollEnabled={true}
                         ref={ref => {
+                            if(this.props.scrollViewRef) {
+                                this.props.scrollViewRef = ref
+                            }
                             this.scrollViewRef = ref;
                         }}
                         {...scrollViewProps}>
@@ -485,7 +492,7 @@ class DropDownPicker extends React.Component {
                                                 justifyContent: 'space-between',
                                                 ...(this.isSelected(item) && this.props.activeItemStyle)
                                             } : {
-                                                
+
                                             }
                                         )
                                     }]}
@@ -500,7 +507,7 @@ class DropDownPicker extends React.Component {
                                     }}>
                                         {item.icon && item.icon()}
                                         <Text style={[
-                                            this.props.labelStyle, 
+                                            this.props.labelStyle,
                                                 multiple ?
                                                 (this.isSelected(item) && this.props.activeLabelStyle) : (this.state.choice.value === item.value && this.props.activeLabelStyle)
                                             , {
